@@ -24,6 +24,7 @@ SetupPage {
     id:             radioPage
     pageComponent:  pageComponent
 
+
     Component {
         id: pageComponent
 
@@ -40,7 +41,7 @@ SetupPage {
             {
             }
 
-            QGCPalette { id: qgcPal; colorGroupEnabled: radioPage.enabled }
+            QGCPalette { id: qgcPal; colorGroupEnabled: radioPage.enabled;}
 
             RadioComponentController {
                 id:             controller

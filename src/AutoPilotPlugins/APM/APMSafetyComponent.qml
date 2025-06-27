@@ -20,7 +20,7 @@ import QGroundControl.ScreenTools
 SetupPage {
     id:             safetyPage
     pageComponent:  safetyPageComponent
-
+    visible: currentRole === "admin"
     Component {
         id: safetyPageComponent
 

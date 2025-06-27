@@ -13,9 +13,8 @@
 #include <QtCore/QString>
 #include <QtCore/QSystemSemaphore>
 
-class RunGuard
-{
-public:
+class RunGuard {
+   public:
     RunGuard(const QString &key);
     ~RunGuard();
 
@@ -23,7 +22,7 @@ public:
     bool tryToRun();
     void release();
 
-private:
+   private:
     const QString key;
     const QString memLockKey;
     const QString sharedmemKey;

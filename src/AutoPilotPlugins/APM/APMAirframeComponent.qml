@@ -23,6 +23,7 @@ import QGroundControl.ScreenTools
 SetupPage {
     id:             airframePage
     pageComponent:  pageComponent
+    visible: currentRole === "admin"
 
     Component {
         id: pageComponent

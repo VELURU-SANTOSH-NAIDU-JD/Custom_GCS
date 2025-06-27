@@ -21,6 +21,7 @@ SetupPage {
     id:             motorPage
     pageComponent:  pageComponent
     enabled:        true
+    visible: currentRole === "admin"
 
     readonly property int _barHeight:       10
     readonly property int _barWidth:        5

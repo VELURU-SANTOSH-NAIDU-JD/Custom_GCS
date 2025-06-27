@@ -63,13 +63,15 @@ public:
     virtual void initializeStreamRates(Vehicle *vehicle);
     void initializeVehicle(Vehicle *vehicle) override;
     bool sendHomePositionToVehicle() const override { return true; }
-    QString missionCommandOverrides(QGCMAVLink::VehicleClass_t vehicleClass) const override;
+    QString missionCommandOverrides(QGCMAVLink::VehicleClass_t vehicleClass) const override; 
     QString _internalParameterMetaDataFile(const Vehicle* vehicle) const override;
     FactMetaData *_getMetaDataForFact(QObject *parameterMetaData, const QString &name, FactMetaData::ValueType_t type, MAV_TYPE vehicleType) const override;
     void _getParameterMetaDataVersionInfo(const QString &metaDataFile, int &majorVersion, int &minorVersion) const override;
     QObject *_loadParameterMetaData(const QString &metaDataFile) override;
-    QString brandImageIndoor(const Vehicle *vehicle) const override { Q_UNUSED(vehicle); return QStringLiteral("/qmlimages/APM/BrandImage"); }
-    QString brandImageOutdoor(const Vehicle *vehicle) const override { Q_UNUSED(vehicle); return QStringLiteral("/qmlimages/APM/BrandImage"); }
+    // QString brandImageIndoor(const Vehicle *vehicle) const override { Q_UNUSED(vehicle); return QStringLiteral("/qmlimages/APM/BrandImage"); }
+    // QString brandImageOutdoor(const Vehicle *vehicle) const override { Q_UNUSED(vehicle); return QStringLiteral("/qmlimages/APM/BrandImage"); }
+    QString brandImageIndoor(const Vehicle *vehicle) const override { Q_UNUSED(vehicle); return QStringLiteral("/qmlimages/vehicleBrandImage.svg"); }
+    QString brandImageOutdoor(const Vehicle *vehicle) const override { Q_UNUSED(vehicle); return QStringLiteral("/qmlimages/vehicleBrandImage.svg"); }
     QString getHobbsMeter(Vehicle *vehicle) const override;
     bool hasGripper(const Vehicle *vehicle) const override;
     const QVariantList &toolIndicators(const Vehicle *vehicle) override;

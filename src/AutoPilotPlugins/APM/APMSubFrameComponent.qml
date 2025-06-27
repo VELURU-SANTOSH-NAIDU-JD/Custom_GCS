@@ -24,7 +24,7 @@ import QGroundControl.Controllers
 SetupPage {
     id:                 subFramePage
     pageComponent:      subFramePageComponent
-
+    visible: currentRole === "admin"
     property bool _oldFW:   globals.activeVehicle.versionCompare(3 ,5 ,2) < 0
     property bool _hasSensibledefaults:   globals.activeVehicle.versionCompare(4 ,1 ,0) >= 0
 

@@ -22,7 +22,7 @@ import QGroundControl.ScreenTools
 SetupPage {
     id:             airframePage
     pageComponent:  (controller && controller.showCustomConfigPanel) ? customFrame : pageComponent
-
+    visible: currentRole === "admin"
     AirframeComponentController {
         id:         controller
     }

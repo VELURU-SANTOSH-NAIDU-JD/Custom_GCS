@@ -6,12 +6,10 @@
  * COPYING.md in the root of the source code directory.
  *
  ****************************************************************************/
-
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Dialogs
 import QtQuick.Layouts
-
 import QtLocation
 import QtPositioning
 import QtQuick.Window
@@ -26,6 +24,7 @@ import QGroundControl.FlightMap
 import QGroundControl.Palette
 import QGroundControl.ScreenTools
 import QGroundControl.Vehicle
+import QGroundControl.LogHelper 1.0
 
 // 3D Viewer modules
 import Viewer3D
@@ -33,12 +32,19 @@ import Viewer3D
 Item {
     id: _root
 
+    LogFileHelper { id: logHelper }
+
+    ListModel {
+        id: binFilesModel
+    }
+
     // These should only be used by MainRootWindow
     property var planController:    _planController
     property var guidedController:  _guidedController
 
     // Properties of UTM adapter
     property bool utmspSendActTrigger: false
+
 
     PlanMasterController {
         id:                     _planController
@@ -179,4 +185,315 @@ Item {
             anchors.fill:           parent
         }
     }
+
+    Rectangle {
+        id: startupOverlay
+        anchors.fill: parent
+        color: "#f2f2f2ee"
+        z: 9999
+        visible: isLoggedIn
+        opacity: 1.0
+
+        Column {
+            anchors.fill: parent
+
+            // Header with background image
+            Rectangle {
+                width: parent.width
+                height: parent.height * 0.80
+                border.width: 0
+                clip: true
+
+                Image {
+                    anchors.fill: parent
+                    source: "/qmlimages/homePageImage.svg" // Replace with actual image path
+                    fillMode: Image.PreserveAspectCrop
+                }
+
+            }
+
+            // Card Section
+            Row {
+                width: parent.width
+                height: parent.height * 0.20
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: 20
+                padding: 30
+
+
+                Row {
+                    width: parent.width
+                    height: parent.height
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    spacing: 20
+                    padding: 30
+
+
+                    Rectangle {
+                        width: 300
+                        height: 130
+                        color: "white"
+                        radius: 10
+                        border.color: "#cccccc"
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                logUploadDialog.logFiles = logHelper.getBinFiles("C:/Users/gfhgd/OneDrive/Desktop/binfiles")
+                                // logUploadDialog.visible = true
+                                logUploadDialog.open()
+                            }
+                            // Button {
+                            //     text: "Test Log Dialog"
+                            //     onClicked: logUploadDialog.open()
+                            // }
+
+
+                        }
+
+                        Column {
+                            anchors.centerIn: parent
+                            spacing: 6
+
+                            QGCLabel {
+                                text: "Log Upload"
+                                font.bold: true
+                                font.pointSize: 14
+                                color: "#222"
+                            }
+                            Image {
+                                source: "qrc:/icons/log_upload.png"
+                                width: 24
+                                height: 24
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        width: 300
+                        height: 130
+                        color: "white"
+                        radius: 10
+                        border.color: "#cccccc"
+                        MouseArea {
+                                id: hoverArea
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                onEntered: versionInfoLabel.text =
+                                    "Firmware: " +
+                                    (_activeVehicle ? _activeVehicle.firmwareMajorVersion + "." +
+                                                      _activeVehicle.firmwareMinorVersion + "." +
+                                                      _activeVehicle.firmwarePatchVersion : "--") +
+                                    "\nApp: " + QGroundControl.qgcVersion
+                                onExited: versionInfoLabel.text = "Up to date"
+                            }
+                        Column {
+                                anchors.centerIn: parent
+                                QGCLabel {
+                                    text: "Device Management"
+                                    font.pointSize: 14
+                                    font.bold: true
+                                    // horizontalAlignment: Text.AlignTop
+                                    // anchors.horizontalCenter: parent.horizontalTop
+                                    color: "black"
+                                }
+
+                                QGCLabel {
+                                    id: versionInfoLabel
+                                    text: hoverArea.containsMouse ?
+                                          ("Firmware: " +
+                                            (_activeVehicle ? _activeVehicle.firmwareMajorVersion + "." +
+                                                              _activeVehicle.firmwareMinorVersion + "." +
+                                                              _activeVehicle.firmwarePatchVersion : "--") +
+                                           "\nApp: " + QGroundControl.qgcVersion)
+                                          : ""
+                                    font.pointSize: 10
+                                    // horizontalAlignment: Text.AlignHCenter
+                                    // anchors.horizontalCenter: parent.horizontalCenter
+                                    color: "black"
+                                    wrapMode: Text.Wrap
+                                    maximumLineCount: 2
+                                }
+                            }
+                        }
+
+                    Rectangle {
+                        width: 700
+                        height: 130
+                        color: "white"
+                        radius: 10
+                        border.color: "#cccccc"
+
+                        MouseArea {
+                            id: hoverArea12
+                            anchors.fill: parent
+                            hoverEnabled: true
+                        }
+
+                        Row {
+                            anchors.fill: parent
+                            anchors.margins: 10
+                            spacing: 70 // 10% of 700
+
+                            QGCLabel {
+                                id: statusText1
+                                width: parent.width * 0.45
+                                height: parent.height
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
+                                font.pointSize: 14
+                                wrapMode: Text.WordWrap
+                                text: {
+                                    var v = QGroundControl.multiVehicleManager.activeVehicle
+                                    var q = v ? v.rcRSSI : -1
+                                    if (hoverArea12.containsMouse){
+                                        if (!v) return "Disconnected\nConnection: " + ((q / 255) * 100).toFixed(3) + "% "
+                                        if (q >= 200) return "Connected\nConnection: "+((q/255)*100).toFixed(3)+"%"
+                                        if (q >= 150) return "Weak Signal\nConnection: "+((q/255)*100).toFixed(3)+"%"
+                                        return "Disconnected\nConnection: "+((q/255)*100).toFixed(3)+"%"
+                                    }
+                                    if (!v) return "Aircraft not Connected"
+                                    if (q >= 200) return "Aircraft Connected"
+                                    if (q >= 150) return "Weak Signal"
+                                    return "Aircraft Disconnected"
+                                }
+                                color: {
+                                    var v = QGroundControl.multiVehicleManager.activeVehicle
+                                    var q = v ? v.rcRSSI : -1
+                                    if (q >= 200) return "green"
+                                    if (q >= 150) return "orange"
+                                    return "red"
+                                }
+                            }
+
+                            Rectangle {
+                                width: parent.width * 0.45
+                                height: 70
+                                color: "#00C853"
+                                radius: 8
+                                border.color: "#00A843"
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                QGCLabel {
+                                    anchors.centerIn: parent
+                                    text: "Begin"
+                                    color: "white"
+                                    font.bold: true
+                                    font.pointSize: 14
+                                }
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: fadeOutAnim.start()
+                                }
+                            }
+                        }
+                    }
+
+
+
+
+
+                }
+
+
+
+            }
+
+        }
+
+    }
+
+
+    Dialog {
+        id: logUploadDialog
+        width: parent.width * 0.8
+        height: parent.height * 0.8
+        title: "Log Files"
+        modal: true
+        standardButtons: Dialog.Cancel
+
+        property var logFiles: []
+
+        Component.onCompleted: {
+            logFiles = logHelper.getBinFiles("C:/Users/gfhgd/OneDrive/Desktop/binfiles")
+        }
+
+        function uploadToFirebase(filePath) {
+            // Placeholder logic (simulate Firebase upload)
+            console.log("Uploading to Firebase:", filePath)
+            return true
+        }
+
+        contentItem: Column {
+            spacing: 10
+            padding: 10
+
+            ListView {
+                id: logFileList
+                width: parent.width
+                height: parent.height - 100
+                model: logUploadDialog.logFiles
+                spacing: 10
+
+                delegate: Row {
+                    width: parent.width
+                    height: 40
+                    spacing: 10
+
+                    Text {
+                        text: modelData
+                        width: parent.width * 0.6
+                        elide: Text.ElideRight
+                        color: "black"
+                    }
+
+                    Button {
+                        text: "Upload"
+                        onClicked: {
+                            console.log("Upload clicked:", modelData)
+                            if (logUploadDialog.uploadToFirebase(modelData)) {
+                                logUploadDialog.logFiles.splice(index, 1)
+                                logUploadDialog.logFiles = logUploadDialog.logFiles.slice() // trigger UI update
+                            }
+                        }
+                    }
+
+                    Button {
+                        text: "Cancel"
+                        onClicked: {
+                            console.log("Cancel clicked:", modelData)
+                            logUploadDialog.logFiles.splice(index, 1)
+                            logUploadDialog.logFiles = logUploadDialog.logFiles.slice() // trigger UI update
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+
+    // Animation block - declare at same level as startupOverlay
+    SequentialAnimation {
+        id: fadeOutAnim
+        running: false
+        PropertyAnimation {
+            target: startupOverlay
+            property: "opacity"
+            from: 1
+            to: 0
+            duration: 500
+        }
+        ScriptAction {
+            script: startupOverlay.visible = false
+        }
+    }
+
+
+
 }
+
+

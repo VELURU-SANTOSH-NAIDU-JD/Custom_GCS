@@ -14,6 +14,7 @@ import QGroundControl.PX4
 
 SetupPage {
     pageComponent:  pageComponent
+    visible: currentRole === "admin"
     Component {
         id: pageComponent
         SensorsSetup {

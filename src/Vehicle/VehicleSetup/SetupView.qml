@@ -216,7 +216,7 @@ Rectangle {
                 checked:            true
                 text:               qsTr("Summary")
                 Layout.fillWidth:   true
-
+                visible: true  // Everyone can see//////////////////////////////////////////////////////
                 onClicked: showSummaryPanel()
             }
 
@@ -261,7 +261,8 @@ Rectangle {
                 id:                 parametersButton
                 visible:            QGroundControl.multiVehicleManager.parameterReadyVehicleAvailable &&
                                     !QGroundControl.multiVehicleManager.activeVehicle.usingHighLatencyLink &&
-                                    _corePlugin.showAdvancedUI
+                                    _corePlugin.showAdvancedUI && currentRole === "admin"
+                //////////////////////////////////////////////////////////////////////////////////////////////////
                 text:               qsTr("Parameters")
                 Layout.fillWidth:   true
                 icon.source:        "/qmlimages/subMenuButtonImage.png"
@@ -271,7 +272,7 @@ Rectangle {
             ConfigButton {
                 id:                 firmwareButton
                 icon.source:      "/qmlimages/FirmwareUpgradeIcon.png"
-                visible:            !ScreenTools.isMobile && _corePlugin.options.showFirmwareUpgrade
+                visible:            !ScreenTools.isMobile && _corePlugin.options.showFirmwareUpgrade && currentRole === "admin"
                 text:               qsTr("Firmware")
                 Layout.fillWidth:   true
 

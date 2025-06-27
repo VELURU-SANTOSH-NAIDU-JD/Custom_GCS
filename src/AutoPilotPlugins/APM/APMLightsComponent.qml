@@ -21,6 +21,7 @@ import QGroundControl.ScreenTools
 SetupPage {
     id:                 lightsPage
     pageComponent:      lightsPageComponent
+    visible: currentRole === "admin"
 
     Component {
         id: lightsPageComponent

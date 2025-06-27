@@ -302,7 +302,14 @@ qt_add_executable(${CMAKE_PROJECT_NAME}
     WIN32
     MACOSX_BUNDLE
     ${QGC_RESOURCES}
+
+    # Main QGC sources...
+
+    # Include ONLY ONE copy of LogFileHelper files (correct path only)
+    src/LogTools/LogFileHelper.cc
+    src/LogTools/LogFileHelper.h
 )
+
 
 if(WIN32)
     # CPMAddPackage(

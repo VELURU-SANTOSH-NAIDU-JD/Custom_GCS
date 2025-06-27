@@ -22,6 +22,7 @@ import QGroundControl.ScreenTools
 SetupPage {
     id:             powerPage
     pageComponent:  powerPageComponent
+    visible: currentRole === "admin"
 
     FactPanelController {
         id:         controller

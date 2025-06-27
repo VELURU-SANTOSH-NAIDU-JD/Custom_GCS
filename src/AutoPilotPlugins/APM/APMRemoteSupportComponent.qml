@@ -20,6 +20,7 @@ import QGroundControl.FactSystem
 
 SetupPage {
     pageComponent:  pageComponent
+    visible: currentRole === "admin"
 
     Component {
         id: pageComponent

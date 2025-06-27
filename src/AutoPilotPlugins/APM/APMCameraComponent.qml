@@ -20,7 +20,7 @@ import QGroundControl.ScreenTools
 SetupPage {
     id:             cameraPage
     pageComponent:  cameraPageComponent
-
+    visible: currentRole === "admin"
     Component {
         id: cameraPageComponent
 

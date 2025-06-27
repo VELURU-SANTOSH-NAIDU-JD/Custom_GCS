@@ -8,7 +8,7 @@
  ****************************************************************************/
 
 #include "QGroundControlQmlGlobal.h"
-
+#include "LogTools/LogFileHelper.h"
 #include "QGCApplication.h"
 #include "QGCCorePlugin.h"
 #include "LinkManager.h"
@@ -86,6 +86,9 @@ void QGroundControlQmlGlobal::registerQmlTypes()
     qmlRegisterUncreatableType<QGCGeoBoundingCube>      ("QGroundControl.FlightMap",             1, 0, "QGCGeoBoundingCube",  "Reference only");
     qmlRegisterUncreatableType<QGCMapPolygon>           ("QGroundControl.FlightMap",             1, 0, "QGCMapPolygon",       "Reference only");
     qmlRegisterUncreatableType<QmlObjectListModel>      ("QGroundControl",                       1, 0, "QmlObjectListModel",  "Reference only");
+    qmlRegisterSingletonType<LogFileHelper>("CustomHelpers", 1, 0, "LogFileHelper", [](QQmlEngine*, QJSEngine*) -> QObject* {
+        return new LogFileHelper();
+    });
 
     qmlRegisterType<MavlinkAction>                      ("QGroundControl.Controllers",           1, 0, "MavlinkAction");
     qmlRegisterType<MavlinkActionManager>               ("QGroundControl.Controllers",           1, 0, "MavlinkActionManager");

@@ -25,6 +25,8 @@ import QGroundControl.UTMSP
 
 /// @brief Native QML top level window
 /// All properties defined here are visible to all QML pages.
+
+
 ApplicationWindow {
     id:             mainWindow
     minimumWidth:   ScreenTools.isMobile ? ScreenTools.screenWidth  : Math.min(ScreenTools.defaultFontPixelWidth * 100, Screen.width)
@@ -33,6 +35,138 @@ ApplicationWindow {
 
     property bool   _utmspSendActTrigger
     property bool   _utmspStartTelemetry
+
+    property bool isLoggedIn: false
+    property string loginError: ""
+    property string currentUsername: ""
+    property string currentRole: ""
+
+    property var users: [
+        { username: "admin1", password: "admin123", role: "admin" },
+        { username: "admin2", password: "admin456", role: "admin" },
+        { username: "user1",  password: "user123",  role: "user"  },
+        { username: "user2",  password: "user456",  role: "user"  }
+    ]
+
+    function validateLogin(username, password) {
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].username === username && users[i].password === password) {
+                currentRole = users[i].role
+                currentUsername = users[i].username
+                return true
+            }
+        }
+        return false
+    }
+
+
+    Item {
+        id: loginScreen
+        anchors.fill: parent
+        visible: !isLoggedIn
+        z: 9999
+
+        // Background image or color
+        Rectangle {
+            anchors.fill: parent
+            color: "#e0f7fa"  // fallback color if image fails
+            Image {
+                anchors.fill: parent
+                source: "/qmlimages/loginPageImage.svg"  // <- Replace with your image
+                fillMode: Image.PreserveAspectCrop
+            }
+        }
+
+        Rectangle {
+            width: 360
+            height: 360
+            radius: 20
+            anchors.centerIn: parent
+            anchors.verticalCenterOffset: 8  // Gives a slight vertical offset
+            color: "#44000000"               // Dark semi-transparent shadow color
+            z: 0
+        }
+
+        // Centered login card
+        Rectangle {
+            width: 350
+            height: 350
+            radius: 20
+            anchors.centerIn: parent
+            color: "white"
+            border.color: "#00796B"
+            border.width: 2
+            z: 1
+
+            Column {
+                anchors.centerIn: parent
+                spacing: 16
+
+                Text {
+                    text: "Login to Leher GCS"
+                    font.pixelSize: 20
+                    font.bold: true
+                    color: "#00796B"
+                }
+
+                TextField {
+                    id: usernameInput
+                    placeholderText: "Username"
+                    width: parent.width - 60
+                    font.pixelSize: 14
+                }
+
+                TextField {
+                    id: passwordInput
+                    placeholderText: "Password"
+                    echoMode: TextInput.Password
+                    width: parent.width - 60
+                    font.pixelSize: 14
+                }
+
+                Text {
+                    text: loginError
+                    color: "red"
+                    font.pixelSize: 13
+                    visible: loginError !== ""
+                }
+
+                Button {
+                    width: parent.width - 60
+                    text: "Login"
+                    onClicked: {
+                        if (validateLogin(usernameInput.text.trim(), passwordInput.text.trim())) {
+                            isLoggedIn = true
+                            loginError = ""
+                            startupOverlay.visible = true
+                            fadeOutAnim.start()
+                        } else {
+                            loginError = "Invalid credentials"
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+
+    SequentialAnimation {
+        id: fadeOutAnim
+        running: false
+        PropertyAnimation {
+            target: loginScreen
+            property: "opacity"
+            from: 1
+            to: 0
+            duration: 500
+        }
+        ScriptAction {
+            script: loginScreen.visible = false
+        }
+    }
+
+
 
     Component.onCompleted: {
         //-- Full screen on mobile or tiny screens

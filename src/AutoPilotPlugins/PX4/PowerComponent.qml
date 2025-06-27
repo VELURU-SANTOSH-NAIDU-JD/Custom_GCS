@@ -26,6 +26,7 @@ import QGroundControl.PX4
 SetupPage {
     id:             powerPage
     pageComponent:  pageComponent
+    visible: currentRole === "admin"
 
     Component {
         id: pageComponent

@@ -22,6 +22,7 @@ import QGroundControl.Palette
 SetupPage {
     id:             safetyPage
     pageComponent:  pageComponent
+    visible: currentRole === "admin"
     Component {
         id: pageComponent
 

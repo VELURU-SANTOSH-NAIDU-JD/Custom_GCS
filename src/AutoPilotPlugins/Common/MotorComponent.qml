@@ -19,6 +19,7 @@ import QGroundControl.ScreenTools
 SetupPage {
     id:             motorPage
     pageComponent:  pageComponent
+    visible: currentRole === "admin"
 
     property bool userLetterMotorIndices: false
 

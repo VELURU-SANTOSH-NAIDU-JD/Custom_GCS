@@ -14,7 +14,6 @@
 #include <QtCore/QSet>
 #include <QtCore/QTimer>
 #include <QtCore/QTranslator>
-
 #include <QtWidgets/QApplication>
 
 class QQmlApplicationEngine;
@@ -29,25 +28,25 @@ class QMetaObject;
 #if defined(qApp)
 #undef qApp
 #endif
-#define qApp (static_cast<QGCApplication*>(QApplication::instance()))
+#define qApp (static_cast<QGCApplication *>(QApplication::instance()))
 
 #if defined(qGuiApp)
 #undef qGuiApp
 #endif
-#define qGuiApp (static_cast<QGCApplication*>(QGuiApplication::instance()))
+#define qGuiApp (static_cast<QGCApplication *>(QGuiApplication::instance()))
 
 #define qgcApp() qApp
 
 /// The main application and management class.
 /// Needs QApplication base to support QtCharts module.
 /// TODO: Use QtGraphs to convert to QGuiApplication
-class QGCApplication : public QApplication
-{
+class QGCApplication : public QApplication {
     Q_OBJECT
 
     /// Unit Test have access to creating and destroying singletons
     friend class UnitTest;
-public:
+
+   public:
     QGCApplication(int &argc, char *argv[], bool unitTesting, bool simpleBootTest);
     ~QGCApplication();
 
@@ -87,7 +86,7 @@ public:
     static QString cachedParameterMetaDataFile();
     static QString cachedAirframeMetaDataFile();
 
-public:
+   public:
     /// Perform initialize which is common to both normal application running and unit tests.
     void init();
     void shutdown();
@@ -95,10 +94,10 @@ public:
     /// Although public, these methods are internal and should only be called by UnitTest code
     QQmlApplicationEngine *qmlAppEngine() const { return _qmlAppEngine; }
 
-signals:
+   signals:
     void languageChanged(const QLocale locale);
 
-public slots:
+   public slots:
     void showVehicleConfig();
 
     void qmlAttemptWindowClose();
@@ -112,24 +111,26 @@ public slots:
     /// Show modal application message to the user
     void showAppMessage(const QString &message, const QString &title = QString());
 
-    /// Show modal application message to the user about the need for a reboot. Multiple messages will be supressed if they occur
-    /// one after the other.
+    /// Show modal application message to the user about the need for a reboot. Multiple messages will be supressed if
+    /// they occur one after the other.
     void showRebootAppMessage(const QString &message, const QString &title = QString());
 
     QGCImageProvider *qgcImageProvider();
 
-private slots:
+   private slots:
     /// Called when the delay timer fires to show the missing parameters warning
     void _missingParamsDisplay();
-    void _qgcCurrentStableVersionDownloadComplete(const QString &remoteFile, const QString &localFile, const QString &errorMsg);
-    static bool _parseVersionText(const QString &versionString, int &majorVersion, int &minorVersion, int &buildVersion);
+    void _qgcCurrentStableVersionDownloadComplete(const QString &remoteFile, const QString &localFile,
+                                                  const QString &errorMsg);
+    static bool _parseVersionText(const QString &versionString, int &majorVersion, int &minorVersion,
+                                  int &buildVersion);
     void _showDelayedAppMessages();
 
-private:
+   private:
     bool compressEvent(QEvent *event, QObject *receiver, QPostEventList *postedEvents) final;
 
     void _initVideo();
-    
+
     /// Initialize the application for normal application boot. Or in other words we are not going to run unit tests.
     void _initForNormalAppBoot();
 
@@ -137,21 +138,22 @@ private:
     void _checkForNewVersion();
 
     bool _runningUnitTests = false;
-    bool _simpleBootTest = false; 
-    static constexpr int _missingParamsDelayedDisplayTimerTimeout = 1000;   ///< Timeout to wait for next missing fact to come in before display
-    QTimer _missingParamsDelayedDisplayTimer;                               ///< Timer use to delay missing fact display
-    QList<QPair<int,QString>> _missingParams;                               ///< List of missing parameter component id:name
+    bool _simpleBootTest = false;
+    static constexpr int _missingParamsDelayedDisplayTimerTimeout =
+        1000;                                   ///< Timeout to wait for next missing fact to come in before display
+    QTimer _missingParamsDelayedDisplayTimer;   ///< Timer use to delay missing fact display
+    QList<QPair<int, QString>> _missingParams;  ///< List of missing parameter component id:name
 
     QQmlApplicationEngine *_qmlAppEngine = nullptr;
-    bool _logOutput = false;    ///< true: Log Qt debug output to file
-    bool _fakeMobile = false;    ///< true: Fake ui into displaying mobile interface
-    bool _settingsUpgraded = false;    ///< true: Settings format has been upgrade to new version
+    bool _logOutput = false;         ///< true: Log Qt debug output to file
+    bool _fakeMobile = false;        ///< true: Fake ui into displaying mobile interface
+    bool _settingsUpgraded = false;  ///< true: Settings format has been upgrade to new version
     int _majorVersion = 0;
     int _minorVersion = 0;
     int _buildVersion = 0;
     QQuickWindow *_mainRootWindow = nullptr;
-    QTranslator _qgcTranslatorSourceCode;           ///< translations for source code C++/Qml
-    QTranslator _qgcTranslatorQtLibs;               ///< tranlsations for Qt libraries
+    QTranslator _qgcTranslatorSourceCode;  ///< translations for source code C++/Qml
+    QTranslator _qgcTranslatorQtLibs;      ///< tranlsations for Qt libraries
     QLocale _locale;
     bool _error = false;
     bool _showErrorsInToolbar = false;
@@ -160,27 +162,28 @@ private:
 
     QList<QPair<QString /* title */, QString /* message */>> _delayedAppMessages;
 
-    class CompressedSignalList
-    {
-    public:
+    class CompressedSignalList {
+       public:
         CompressedSignalList() {}
         void add(const QMetaMethod &method);
         void remove(const QMetaMethod &method);
         bool contains(const QMetaObject *metaObject, int signalIndex);
 
-    private:
+       private:
         /// Returns a signal index that is can be compared to QMetaCallEvent.signalId
         static int _signalIndex(const QMetaMethod &method);
 
-        QMap<const QMetaObject*, QSet<int>> _signalMap;
+        QMap<const QMetaObject *, QSet<int>> _signalMap;
 
         Q_DISABLE_COPY(CompressedSignalList)
     };
 
     CompressedSignalList _compressedSignals;
 
-    const QString _settingsVersionKey = QStringLiteral("SettingsVersion"); ///< Settings key which hold settings version
-    static constexpr const char *_deleteAllSettingsKey = "DeleteAllSettingsNextBoot"; ///< If this settings key is set on boot, all settings will be deleted
+    const QString _settingsVersionKey =
+        QStringLiteral("SettingsVersion");  ///< Settings key which hold settings version
+    static constexpr const char *_deleteAllSettingsKey =
+        "DeleteAllSettingsNextBoot";  ///< If this settings key is set on boot, all settings will be deleted
 
     const QString _qgcImageProviderId = QStringLiteral("QGCImages");
 };

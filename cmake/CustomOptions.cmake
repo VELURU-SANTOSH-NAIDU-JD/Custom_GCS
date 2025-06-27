@@ -9,7 +9,7 @@ include(CMakeDependentOption)
 option(QGC_ENABLE_HERELINK "Enable Herelink Support" OFF)
 
 # App
-set(QGC_APP_NAME "QGroundControl" CACHE STRING "App Name")
+set(QGC_APP_NAME "Leher" CACHE STRING "App Name")
 set(QGC_APP_COPYRIGHT "Copyright (c) 2025 QGroundControl. All rights reserved." CACHE STRING "Copyright")
 set(QGC_APP_DESCRIPTION "Open Source Ground Control App" CACHE STRING "Description")
 set(QGC_ORG_NAME "QGroundControl" CACHE STRING "Org Name")
@@ -74,7 +74,8 @@ set(QGC_APPIMAGE_ICON_PATH "${CMAKE_SOURCE_DIR}/resources/icons/qgroundcontrol.p
 
 # Windows
 set(QGC_WINDOWS_INSTALL_HEADER_PATH "${CMAKE_SOURCE_DIR}/deploy/windows/installheader.bmp" CACHE FILEPATH "Windows Install Header Path")
-set(QGC_WINDOWS_ICON_PATH "${CMAKE_SOURCE_DIR}/deploy/windows/WindowsQGC.ico" CACHE FILEPATH "Windows Icon Path")
+# set(QGC_WINDOWS_ICON_PATH "${CMAKE_SOURCE_DIR}/deploy/windows/WindowsQGC.ico" CACHE FILEPATH "Windows Icon Path")
+set(QGC_WINDOWS_ICON_PATH "${CMAKE_SOURCE_DIR}/resources/icons/qgroundcontrol.ico" CACHE FILEPATH "Windows Icon Path")
 set(QGC_WINDOWS_RESOURCE_FILE_PATH "${CMAKE_SOURCE_DIR}/deploy/windows/QGroundControl.rc" CACHE FILEPATH "Windows Resource File Path")
 
 # CPM
