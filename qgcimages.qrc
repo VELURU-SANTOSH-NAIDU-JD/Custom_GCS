@@ -196,6 +196,11 @@
         <file alias="vehicleArrowOpaque.svg">src/FlightMap/Images/vehicleArrowOpaque.svg</file>
         <file alias="vehicleArrowOutline.svg">src/FlightMap/Images/vehicleArrowOutline.svg</file>
         <file alias="vehicleBrandImage.svg">src/FlightMap/Images/vehicleBrandImage.svg</file>
+        <file alias="homepage.jpg">src/FlightMap/Images/homepage.jpg</file>
+        <file alias="BrandLogoImage.png">src/FlightMap/Images/BrandLogoImage.png</file>
+        <file alias="boxbg.png">src/FlightMap/Images/boxbg.png</file>
+        <file alias="docbg.png">src/FlightMap/Images/docbg.png</file>
+        <file alias="signinpage.png">src/FlightMap/Images/signinpage.png</file>
         <file alias="loginPageImage.svg">src/FlightMap/Images/loginPageImage.svg</file>
         <file alias="homePageImage.svg">src/FlightMap/Images/homePageImage.svg</file>
         <file alias="VehicleDown.png">src/AutoPilotPlugins/PX4/Images/VehicleDown.png</file>

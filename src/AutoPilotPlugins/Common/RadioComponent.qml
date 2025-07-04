@@ -24,7 +24,6 @@ SetupPage {
     id:             radioPage
     pageComponent:  pageComponent
 
-
     Component {
         id: pageComponent
 

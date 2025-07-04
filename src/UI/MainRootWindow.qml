@@ -66,13 +66,25 @@ ApplicationWindow {
         visible: !isLoggedIn
         z: 9999
 
+        MouseArea {
+            id: inputBlocker
+            anchors.fill: parent
+            z: 0       // Behind everything inside startupOverlay
+            enabled: true
+            hoverEnabled: true
+            preventStealing: true
+            propagateComposedEvents: false
+            onClicked: {
+            }
+        }
+
         // Background image or color
         Rectangle {
             anchors.fill: parent
             color: "#e0f7fa"  // fallback color if image fails
             Image {
                 anchors.fill: parent
-                source: "/qmlimages/loginPageImage.svg"  // <- Replace with your image
+                source: "/qmlimages/signinpage.png"  // <- Replace with your image
                 fillMode: Image.PreserveAspectCrop
             }
         }
@@ -103,7 +115,7 @@ ApplicationWindow {
                 spacing: 16
 
                 Text {
-                    text: "Login to Leher GCS"
+                    text: "Login to Leher's GCS"
                     font.pixelSize: 20
                     font.bold: true
                     color: "#00796B"
@@ -139,32 +151,18 @@ ApplicationWindow {
                             isLoggedIn = true
                             loginError = ""
                             startupOverlay.visible = true
-                            fadeOutAnim.start()
                         } else {
                             loginError = "Invalid credentials"
                         }
                     }
 
                 }
+
             }
         }
     }
 
 
-    SequentialAnimation {
-        id: fadeOutAnim
-        running: false
-        PropertyAnimation {
-            target: loginScreen
-            property: "opacity"
-            from: 1
-            to: 0
-            duration: 500
-        }
-        ScriptAction {
-            script: loginScreen.visible = false
-        }
-    }
 
 
 
@@ -528,7 +526,7 @@ ApplicationWindow {
                             height:             toolSelectDialog._toolButtonHeight
                             Layout.fillWidth:   true
                             text:               qsTr("Application Settings")
-                            imageResource:      "/res/QGCLogoFull.svg"
+                            imageResource:      "/res/LeherLogoFull.svg"
                             imageColor:         "transparent"
                             visible:            !QGroundControl.corePlugin.options.combineSettingsAndSetup
                             onClicked: {

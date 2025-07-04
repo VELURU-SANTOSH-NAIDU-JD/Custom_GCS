@@ -72,7 +72,7 @@ Rectangle {
         QGCToolBarButton {
             id:                     currentButton
             Layout.preferredHeight: viewButtonRow.height
-            icon.source:            "/res/QGCLogoFull.svg"
+            icon.source:            "/res/LeherLogoFull.svg"
             logo:                   true
             onClicked:              mainWindow.showToolSelectDialog()
         }
@@ -112,8 +112,10 @@ Rectangle {
         anchors.top:            parent.top
         anchors.bottom:         parent.bottom
         anchors.margins:        ScreenTools.defaultFontPixelHeight * 0.66
+        height: 200
+        width : 170
         visible:                _activeVehicle && !_communicationLost && x > (toolsFlickable.x + toolsFlickable.contentWidth + ScreenTools.defaultFontPixelWidth)
-        fillMode:               Image.PreserveAspectFit
+        // fillMode:               Image.PreserveAspectFit
         source:                 _outdoorPalette ? _brandImageOutdoor : _brandImageIndoor
         mipmap:                 true
 
@@ -268,6 +270,11 @@ Rectangle {
                 missionControlDialog.open()
             }
         }
+
+
+
+
+
 
 
 

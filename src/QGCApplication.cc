@@ -140,8 +140,8 @@ QGCApplication::QGCApplication(int &argc, char *argv[], bool unitTesting, bool s
     setApplicationName("Leher Sustainable Agri Private Limited"); // applicationName
     setOrganizationName("Leher.org"); // QGC_ORG_NAME
     setOrganizationDomain("Leher.ag"); // QGC_ORG_DOMAIN
-    setApplicationVersion("Devloper: Santosh Naidu\n" + QString(QGC_APP_VERSION_STR));
-    setWindowIcon(QIcon(":/res/qgroundcontrol.ico"));
+    setApplicationVersion(QString(QGC_APP_VERSION_STR));
+    // setWindowIcon(QIcon(":/res/qgroundcontrol.ico"));
 #ifdef Q_OS_LINUX
     setWindowIcon(QIcon(":/res/qgroundcontrol.ico"));
 #endif

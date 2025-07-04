@@ -249,7 +249,7 @@ Rectangle {
                     icon.source:      modelData.iconResource
                     setupComplete:      modelData.setupComplete
                     text:               modelData.name
-                    visible:            modelData.setupSource.toString() !== ""
+                    visible:            modelData.setupSource.toString() !== "" && (modelData.name === "Radio" || modelData.name === "Sensors" || currentRole === "admin")
                     Layout.fillWidth:   true
                     onClicked:          showVehicleComponentPanel(componentUrl)
 
