@@ -30,6 +30,8 @@ Rectangle {
     width:  parent.width
     height: ScreenTools.toolbarHeight
     color:  qgcPal.toolbarBackground
+    // color:  "#c0d535"
+
 
     property var    _activeVehicle:     QGroundControl.multiVehicleManager.activeVehicle
     property bool   _communicationLost: _activeVehicle ? _activeVehicle.vehicleLinkManager.communicationLost : false
@@ -56,9 +58,12 @@ Rectangle {
 
         gradient: Gradient {
             orientation: Gradient.Horizontal
-            GradientStop { position: 0;                                     color: _mainStatusBGColor }
-            GradientStop { position: currentButton.x + currentButton.width; color: _mainStatusBGColor }
-            GradientStop { position: 1;                                     color: _root.color }
+            // GradientStop { position: 0;                                     color: _mainStatusBGColor }
+            // GradientStop { position: currentButton.x + currentButton.width; color: _mainStatusBGColor }
+            // GradientStop { position: 1;                                     color: _root.color }
+            GradientStop { position: 0;                                     color: "#c0d535" }
+            GradientStop { position: currentButton.x + currentButton.width; color: "#c0d535" }
+            GradientStop { position: 1;                                     color: "#c0d535" }
         }
     }
 
@@ -220,16 +225,211 @@ Rectangle {
 
     //custom modifications
 
+    Button {
+        id: logoutButton
+        text: "Profile"
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.margins: 8
+        anchors.rightMargin: 200
+        width: 120
+        height: 40
+        background: Rectangle {
+            color: "#1a6532"
+            radius: 6
+            border.color: "#c0d535"
+            border.width: 1
+        }
+        contentItem: Text {
+            text: logoutButton.text
+            color: "#c0d535"
+            font.bold: true
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            anchors.fill: parent
+            anchors.margins: 6
+        }
+        onClicked: logoutDialog.open()
+    }
+
+    Dialog {
+        id: logoutDialog
+        title: ""
+        modal: false
+        width: 400
+        height: 390
+        standardButtons: Dialog.NoButton
+
+        x: parent.width - width - 50
+        y: 50
+
+        background: Rectangle {
+            radius: 12
+            color: "#0d2d0c"
+            border.color: "#1b9500"
+            border.width: 1
+        }
+
+        contentItem: Column {
+            anchors.fill: parent
+            anchors.margins: 16
+            spacing: 16
+
+            // Profile Picture Circle
+            Rectangle {
+                width: 100
+                height: 100
+                radius: 50
+                color: "#ffffff"
+                anchors.horizontalCenter: parent.horizontalCenter
+                border.color: "#1b9500"
+                border.width: 2
+                Image {
+                    source: "/qmlimages/profileImage.jpg"
+                    anchors.fill: parent
+                    fillMode: Image.PreserveAspectCrop
+                }
+
+            }
+
+            // Section Header
+            Label {
+                text: "PROFILE OVERVIEW"
+                font.pixelSize: 20
+                font.bold: true
+                color: "#ffffff"
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Rectangle {
+                height: 1
+                width: parent.width
+                color: "#ffffff30"
+            }
+
+            // Username
+            Row {
+                spacing: 8
+                Label {
+                    text: "Username:"
+                    font.pixelSize: 18
+                    color: "#bbbbbb"
+                }
+                Label {
+                    text: currentUsername
+                    font.pixelSize: 18
+                    color: "#ffffff"
+                }
+            }
+
+            // Profile Type
+            Row {
+                spacing: 8
+                Label {
+                    text: "Role:"
+                    font.pixelSize: 18
+                    color: "#bbbbbb"
+                }
+                Label {
+                    text: currentRole.toUpperCase()
+                    font.pixelSize: 18
+                    color: "#ffffff"
+                }
+            }
+
+            // Optional Email/Info
+            Row {
+                spacing: 8
+                Label {
+                    text: "Access:"
+                    font.pixelSize: 18
+                    color: "#bbbbbb"
+                }
+                Label {
+                    text: currentRole.toUpperCase() === "ADMIN" ? "Full Access" : "Limited Access"
+                    font.pixelSize: 18
+                    color: "#ffffff"
+                }
+            }
+
+            Rectangle {
+                height: 1
+                width: parent.width
+                color: "#ffffff30"
+            }
+
+            // Button Section
+            Row {
+                spacing: 16
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                Button {
+                    text: "Close"
+                    width: 100
+                    background: Rectangle {
+                        color: "#444"
+                        radius: 8
+                    }
+                    onClicked: logoutDialog.close()
+                }
+
+                Button {
+                    text: "Logout"
+                    width: 100
+                    background: Rectangle {
+                        color: "#e53935"
+                        radius: 8
+                    }
+                    onClicked: {
+                        usernameInput.text = ""
+                        passwordInput.text = ""
+                        logoutDialog.close()
+                        logoutTimer.start()  // use delayed logout if needed
+                    }
+                }
+            }
+        }
+
+        // Optional delayed logout
+        Timer {
+            id: logoutTimer
+            interval: 200
+            running: false
+            repeat: false
+            onTriggered: isLoggedIn = false
+        }
+    }
+
 
     ComboBox {
                             id: modeCombo
-                            anchors.right:parent.right
+                            anchors.right:logoutButton.left
                             anchors.top:parent.top
                             anchors.margins:8
-                            anchors.rightMargin: 200
+                            anchors.rightMargin: 8
                             enabled:QGroundControl.multiVehicleManager.activeVehicle !== null
-                            width: 130
+                            width: 120
+                            height: 40
                             model: ["Loiter", "Stabilize", "Guided", "Auto", "RTL","Land",]
+
+                            background: Rectangle {
+                                color: "#1a6532"
+                                radius: 6
+                                border.color: "#c0d535"
+                                border.width: 1
+                            }
+
+                            contentItem: Text {
+                                text: modeCombo.displayText
+                                color: "#c0d535"
+                                font.bold: true
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                anchors.fill: parent
+                                anchors.margins: 6
+                            }
+
+
                             onCurrentTextChanged: {
                                 var vehicle = QGroundControl.multiVehicleManager.activeVehicle
                                 if (vehicle) {
@@ -239,37 +439,76 @@ Rectangle {
                         }
 
 
-    Button{
-            id:armtoggler
-            anchors.right:modeCombo.left
-            anchors.top:parent.top
-            anchors.topMargin: 8
-            anchors.rightMargin:8
-            text:"Arm/Disarm"
-            enabled:QGroundControl.multiVehicleManager.activeVehicle !== null
+    // Button{
+    //         id:armtoggler
+    //         anchors.right:modeCombo.left
+    //         anchors.top:parent.top
+    //         anchors.topMargin: 8
+    //         anchors.rightMargin:8
+    //         text:"Arm/Disarm"
+    //         enabled:QGroundControl.multiVehicleManager.activeVehicle !== null
 
-            onClicked:{
-                var vehicle = QGroundControl.multiVehicleManager.activeVehicle
-                if(vehicle){
-                    //toggle btwn arm and disarm
-                    vehicle.armed = !vehicle.armed  // Toggle arm state
-                }
-            }
-        }
+    //         width: 120
+    //         height: 40
+    //         background: Rectangle {
+    //             color: "#1a6532"
+    //             radius: 6
+    //             border.color: "#c0d535"
+    //             border.width: 1
+    //         }
+    //         contentItem: Text {
+    //             text: armtoggler.text
+    //             color: "#c0d535"
+    //             font.bold: true
+    //             horizontalAlignment: Text.AlignHCenter
+    //             verticalAlignment: Text.AlignVCenter
+    //             anchors.fill: parent
+    //             anchors.margins: 6
+    //         }
+
+    //         onClicked:{
+    //             var vehicle = QGroundControl.multiVehicleManager.activeVehicle
+    //             if(vehicle){
+    //                 //toggle btwn arm and disarm
+    //                 vehicle.armed = !vehicle.armed  // Toggle arm state
+    //             }
+    //         }
+    //     }
 
 
-    Button{
-            id: missionControlButton
-            anchors.right:armtoggler.left
-            anchors.top:parent.top
-            anchors.topMargin: 8
-            anchors.rightMargin:8
-            text: "Mission"
-            enabled: QGroundControl.multiVehicleManager.activeVehicle !== null
-            onClicked: {
-                missionControlDialog.open()
-            }
-        }
+    // Button{
+    //         id: missionControlButton
+    //         anchors.right:modeCombo.left
+    //         anchors.top:parent.top
+    //         anchors.topMargin: 8
+    //         anchors.rightMargin:8
+    //         text: "Mission"
+    //         enabled: QGroundControl.multiVehicleManager.activeVehicle !== null
+
+    //         width: 120
+    //         height: 40
+    //         background: Rectangle {
+    //         color: "#1a6532"
+    //         radius: 6
+    //         border.color: "#c0d535"
+    //         border.width: 1
+    //        }
+    //         contentItem: Text {
+    //         text: missionControlButton.text
+    //         color: "#c0d535"
+    //         font.bold: true
+    //         horizontalAlignment: Text.AlignHCenter
+    //         verticalAlignment: Text.AlignVCenter
+    //         anchors.fill: parent
+    //         anchors.margins: 6
+    //         }
+
+    //         onClicked: {
+    //             // missionControlDialog.open()
+    //         }
+    //     }
+
+
 
 
 
@@ -1335,6 +1574,92 @@ Rectangle {
 
     //     }
     // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Label {
+    //     text: "Reseat Password"
+    //     font.pixelSize: 25
+    //     color: "white"
+    //     horizontalAlignment: Text.AlignHCenter
+    //     anchors.horizontalCenter: parent.horizontalCenter
+    // }
+
+    // TextField {
+    //     id: currentPassInput
+    //     placeholderText: "Current Password"
+    //     width: (parent.width)/2
+    //     color: "black"
+    //     background: Rectangle {
+    //         color: "white"
+    //         radius: 6
+    //     }
+    // }
+
+    // TextField {
+    //     id: newPassInput
+    //     placeholderText: "New Password"
+    //     width: (parent.width)/2
+    //     color: "black"
+    //     background: Rectangle {
+    //         color: "white"
+    //         radius: 6
+    //     }
+    // }
+
+    // Text {
+    //     text: resetError
+    //     color: "red"
+    //     font.pixelSize: 13
+    //     visible: resetError !== ""
+    // }
+
+    // Button {
+    //     text: "Reset"
+    //     width: (parent.width)/3
+    //     onClicked: {
+    //         currentPass = currentPassInput.text.trim()
+    //         newPass = newPassInput.text.trim()
+    //         if (resetLogin(currentPass, newPass)) {
+    //             resetError = ""
+    //         } else {
+    //             resetError = "Invalid Password"
+    //         }
+    //     }
+    // }
+
 
 }
 

@@ -6,7 +6,7 @@
 
 class LogFileHelper : public QObject
 {
-    Q_OBJECT  // This is essential for moc
+    Q_OBJECT  // essential for moc
 
    public:
     explicit LogFileHelper(QObject* parent = nullptr);

@@ -82,13 +82,13 @@ void QGCPalette::_buildMap()
     DECLARE_QGC_COLOR(statusFailedText,     "#9d9d9d", "#000000", "#707070", "#ffffff")
     DECLARE_QGC_COLOR(statusPassedText,     "#9d9d9d", "#000000", "#707070", "#ffffff")
     DECLARE_QGC_COLOR(statusPendingText,    "#9d9d9d", "#000000", "#707070", "#ffffff")
-    DECLARE_QGC_COLOR(toolbarBackground,    "#ffffff", "#90fb5f", "#222222", "#222222")
+    DECLARE_QGC_COLOR(toolbarBackground, "#c0d535", "#c0d535", "#c0d535", "#c0d535")
     DECLARE_QGC_COLOR(groupBorder,          "#bbbbbb", "#bbbbbb", "#707070", "#707070")
 
     // Colors not affecting by theming
     //                                              Disabled    Enabled
-    DECLARE_QGC_NONTHEMED_COLOR(brandingPurple,     "#4A2C6D", "#4A2C6D")
-    DECLARE_QGC_NONTHEMED_COLOR(brandingBlue,       "#48D6FF", "#6045c5")
+    DECLARE_QGC_NONTHEMED_COLOR(brandingPurple,     "#a8ff44ff", "#aeff5dff")
+    DECLARE_QGC_NONTHEMED_COLOR(brandingBlue,       "#a8ff44ff", "#8bff61ff")
     DECLARE_QGC_NONTHEMED_COLOR(toolStripFGColor,   "#707070", "#ffffff")
 
     // Colors not affecting by theming or enable/disable
@@ -101,8 +101,8 @@ void QGCPalette::_buildMap()
 // Colors for UTM Adapter
 #ifdef QGC_UTM_ADAPTER
     DECLARE_QGC_COLOR(switchUTMSP,        "#b0e0e6", "#b0e0e6", "#b0e0e6", "#b0e0e6");
-    DECLARE_QGC_COLOR(sliderUTMSP,        "#9370db", "#9370db", "#9370db", "#9370db");
-    DECLARE_QGC_COLOR(successNotifyUTMSP, "#3cb371", "#3cb371", "#3cb371", "#3cb371");
+    DECLARE_QGC_COLOR(sliderUTMSP,        "#aeff5dff", "#aeff5dff", "#aeff5dff", "#5ff971ff");
+    DECLARE_QGC_COLOR(successNotifyUTMSP, "#1a6532", "#1a6532", "#1a6532", "#1a6532");
 #endif
 }
 

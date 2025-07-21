@@ -197,6 +197,7 @@
         <file alias="vehicleArrowOutline.svg">src/FlightMap/Images/vehicleArrowOutline.svg</file>
         <file alias="vehicleBrandImage.svg">src/FlightMap/Images/vehicleBrandImage.svg</file>
         <file alias="homepage.jpg">src/FlightMap/Images/homepage.jpg</file>
+        <file alias="profileImage.jpg">src/FlightMap/Images/profileImage.jpg</file>
         <file alias="BrandLogoImage.png">src/FlightMap/Images/BrandLogoImage.png</file>
         <file alias="boxbg.png">src/FlightMap/Images/boxbg.png</file>
         <file alias="docbg.png">src/FlightMap/Images/docbg.png</file>

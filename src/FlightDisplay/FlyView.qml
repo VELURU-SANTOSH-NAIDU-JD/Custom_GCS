@@ -25,6 +25,15 @@ import QGroundControl.Palette
 import QGroundControl.ScreenTools
 import QGroundControl.Vehicle
 import QGroundControl.LogHelper 1.0
+import QtQuick.Controls.Material 2.15
+import Qt5Compat.GraphicalEffects
+
+
+
+
+
+
+import QGroundControl.FactControls
 
 // 3D Viewer modules
 import Viewer3D
@@ -43,7 +52,6 @@ Item {
     property var guidedController:  _guidedController
     // Properties of UTM adapter
     property bool utmspSendActTrigger: false
-
 
     PlanMasterController {
         id:                     _planController
@@ -185,13 +193,19 @@ Item {
         }
     }
 
+
     Rectangle {
         id: startupOverlay
         anchors.fill: parent
         color: "#f2f2f2ee"
-        visible: isLoggedIn
-        z: 9999
-        opacity: 1.0
+        visible: isLoggedIn && isLoggedout
+        Timer {
+            id: logoutTimers
+            interval: 200
+            running: false
+            repeat: false
+            onTriggered: isLoggedout = false
+        }
 
         MouseArea {
             anchors.fill: parent
@@ -266,7 +280,7 @@ Item {
                         //     height: 32
                         // }
                     }
-                }
+                }                
 
                 // Card 2 - Device Info
                 Rectangle {
@@ -292,8 +306,6 @@ Item {
                     Column {
                         anchors.centerIn: parent
                         spacing: 8
-
-
                         QGCLabel {
                             text: "Device Management"
                             font.pointSize: 17
@@ -365,12 +377,27 @@ Item {
                         }
 
                         Rectangle {
+                            id: beginButton
                             width: 260
                             height: 70
                             radius: 10
-                            color: "#00C853"
+                            color: mouseArea.containsMouse ? "#00C853" : "#00C853" // hover color transition
                             border.color: "#00A843"
                             anchors.verticalCenter: parent.verticalCenter
+                            scale: mouseArea.pressed ? 0.97 : 1.0
+                            Behavior on color { NumberAnimation { duration: 200 } }
+                            Behavior on scale { NumberAnimation { duration: 100 } }
+
+                            // Drop shadow effect
+                            layer.enabled: true
+                            layer.effect: DropShadow {
+                                color: mouseArea.containsMouse ? "#A5D6A7" : "transparent"
+                                radius: 12
+                                samples: 16
+                                spread: 0.2
+                                verticalOffset: 4
+                                horizontalOffset: 0
+                            }
 
                             QGCLabel {
                                 anchors.centerIn: parent
@@ -381,12 +408,15 @@ Item {
                             }
 
                             MouseArea {
+                                id: mouseArea
                                 anchors.fill: parent
-                                onClicked: fadeOutAnim.start()
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
+
+                                onClicked: logoutTimers.start()
                             }
                         }
+
                     }
                 }
 
@@ -398,62 +428,76 @@ Item {
 
 
     Dialog {
-            id: logUploadDialog
-            width: parent.width * 0.8
-            height: parent.height * 0.8
-            title: "Log Files"
-            modal: true
-            standardButtons: Dialog.Close
+        id: logUploadDialog
+        width: parent.width * 0.6
+        height: parent.height * 0.8
+        title: "Log Files"
+        modal: true
+        standardButtons: Dialog.NoButton
 
-            property var logFiles: []
+        property var logFiles: []
 
-            function uploadToFirebase(filePath) {
-                // Placeholder logic (simulate Firebase upload)
-                console.log("Uploading to Firebase:", filePath)
-                return true
-            }
+        function uploadToFirebase(filePath) {
+            console.log("Uploading to Firebase:", filePath)
+            return true
+        }
 
-            contentItem: Column {
-                spacing: 10
-                padding: 10
+        contentItem: Column {
+            spacing: 16
+            padding: 24
 
-                ListView {
-                    id: logFileList
-                    width: parent.width
-                    height: parent.height - 100
-                    model: logUploadDialog.logFiles
-                    spacing: 10
+            ListView {
+                width: parent.width
+                height: parent.height - 100
+                model: logUploadDialog.logFiles
+                spacing: 12
 
-                    delegate: Row {
-                        width: parent.width
-                        height: 40
-                        spacing: 10
+                delegate: Frame {
+                    width: parent.width - 100
+                    height: 60
+                    padding: 12
+                    background: Rectangle {
+                        color: "#f2f2f2"
+                        radius: 8
+                    }
 
-                        Text {
+                    Row {
+                        anchors.fill: parent
+                        spacing: 16
+
+                        // Center-aligned file name
+                        Label {
                             text: modelData
-                            width: parent.width * 0.6
-                            elide: Text.ElideRight
-                            color: "black"
+                            font.pixelSize: 16
+                            verticalAlignment: Label.AlignVCenter
+                            horizontalAlignment: Label.AlignLeft
+                            elide: Label.ElideRight
+                            width: parent.width * 0.7
                         }
+
+                        Item { width: 1; Layout.fillWidth: true }  // Spacer
 
                         Button {
                             text: "Upload"
+                            width: 80
+                            height: 40
+
                             onClicked: {
                                 console.log("Upload clicked:", modelData)
                                 if (logUploadDialog.uploadToFirebase(modelData)) {
                                     logUploadDialog.logFiles.splice(index, 1)
-                                    logUploadDialog.logFiles = logUploadDialog.logFiles.slice() // trigger UI update
+                                    logUploadDialog.logFiles = logUploadDialog.logFiles.slice()
                                 }
                             }
 
                             background: Rectangle {
-                                color: "#4CAF50" // Material green
+                                color: "#4CAF50"
                                 radius: 6
                             }
 
                             contentItem: Text {
                                 text: "Upload"
-                                color: "white"      // Text color
+                                color: "white"
                                 font.bold: true
                                 anchors.centerIn: parent
                             }
@@ -461,47 +505,55 @@ Item {
 
                         Button {
                             text: "Cancel"
+                            width: 80
+                            height: 40
+
                             onClicked: {
                                 console.log("Cancel clicked:", modelData)
                                 logUploadDialog.logFiles.splice(index, 1)
-                                logUploadDialog.logFiles = logUploadDialog.logFiles.slice() // trigger UI update
+                                logUploadDialog.logFiles = logUploadDialog.logFiles.slice()
                             }
 
                             background: Rectangle {
-                                color: "#fe4242" // Material green
+                                color: "#F44336"
                                 radius: 6
                             }
 
                             contentItem: Text {
-                                text: "Cancle"
-                                color: "white"      // Text color
+                                text: "Cancel"
+                                color: "white"
                                 font.bold: true
                                 anchors.centerIn: parent
                             }
-
                         }
                     }
                 }
             }
 
-
-        }
-
-    // Animation block - declare at same level as startupOverlay
-    SequentialAnimation {
-        id: fadeOutAnim
-        running: false
-        PropertyAnimation {
-            target: startupOverlay
-            property: "opacity"
-            from: 1
-            to: 0
-            duration: 500
-        }
-        ScriptAction {
-            script: startupOverlay.visible = false
+            // Bottom Close Button
+            DialogButtonBox {
+                alignment: Qt.AlignLeft
+                standardButtons: DialogButtonBox.Close
+                onRejected: logUploadDialog.close()
+            }
         }
     }
+
+    // Animation block - declare at same level as startupOverlay
+    // SequentialAnimation {
+    //     id: fadeOutAnim
+    //     running: false
+    //     PropertyAnimation {
+    //         target: startupOverlay
+    //         property: "opacity"
+    //         from: 1
+    //         to: 0
+    //         duration: 500
+    //     }
+    //     ScriptAction {
+    //         script: startupOverlay.visible = false
+    //     }
+    // }
 
 
 

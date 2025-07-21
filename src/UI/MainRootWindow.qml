@@ -26,6 +26,13 @@ import QGroundControl.UTMSP
 /// @brief Native QML top level window
 /// All properties defined here are visible to all QML pages.
 
+import QtLocation
+import QtPositioning
+import QtQml.Models
+import QGroundControl.Controllers
+import QGroundControl.Vehicle
+import QtQuick.Controls.Material 2.15
+import Viewer3D
 
 ApplicationWindow {
     id:             mainWindow
@@ -37,9 +44,11 @@ ApplicationWindow {
     property bool   _utmspStartTelemetry
 
     property bool isLoggedIn: false
+    property bool isLoggedout: false
     property string loginError: ""
     property string currentUsername: ""
     property string currentRole: ""
+
 
     property var users: [
         { username: "admin1", password: "admin123", role: "admin" },
@@ -47,6 +56,7 @@ ApplicationWindow {
         { username: "user1",  password: "user123",  role: "user"  },
         { username: "user2",  password: "user456",  role: "user"  }
     ]
+
 
     function validateLogin(username, password) {
         for (let i = 0; i < users.length; i++) {
@@ -75,6 +85,17 @@ ApplicationWindow {
             preventStealing: true
             propagateComposedEvents: false
             onClicked: {
+            }
+        }
+
+        Timer {
+            id: logoutTimerss
+            interval: 200
+            running: false
+            repeat: false
+            onTriggered: {
+                isLoggedIn = true
+                isLoggedout = true
             }
         }
 
@@ -148,9 +169,8 @@ ApplicationWindow {
                     text: "Login"
                     onClicked: {
                         if (validateLogin(usernameInput.text.trim(), passwordInput.text.trim())) {
-                            isLoggedIn = true
+                            logoutTimerss.start()
                             loginError = ""
-                            startupOverlay.visible = true
                         } else {
                             loginError = "Invalid credentials"
                         }
@@ -164,6 +184,34 @@ ApplicationWindow {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // property string currentPass: ""
+    // property string newPass: ""
+
+    // function resetLogin(username, password) {
+    //     for (let i = 0; i < users.length; i++) {
+    //         if (users[i].username === currentUsername && users[i].password === currentPass) {
+    //             users[i].password = newPass
+    //             return true
+    //         }
+    //     }
+    //     return false
+    // }
 
 
     Component.onCompleted: {
