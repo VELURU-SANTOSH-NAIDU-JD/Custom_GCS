@@ -24,7 +24,6 @@ import QtCore
 import QtNetwork
 
 
-
 Rectangle {
     id:     _root
     width:  parent.width

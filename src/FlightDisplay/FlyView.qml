@@ -364,14 +364,19 @@ Item {
                                 var v = QGroundControl.multiVehicleManager.activeVehicle
                                 var q = v ? v.rcRSSI : -1
                                 if (hoverArea12.containsMouse) {
-                                    if (!v) return "Disconnected\nConnection: " + ((q / 255) * 100).toFixed(2) + "%"
+                                    if (!v) {
+                                        if (q < 1) return "Disconnected\nConnection: " + 0 + "%"
+                                        return "Disconnected\nConnection: " + ((q / 255) * 100).toFixed(2) + "%"
+                                    }
                                     if (q >= 200) return "Connected\nConnection: " + ((q / 255) * 100).toFixed(2) + "%"
                                     if (q >= 150) return "Weak Signal\nConnection: " + ((q / 255) * 100).toFixed(2) + "%"
+                                    if (q < 1) return "Disconnected\nConnection: " + 0 + "%"
                                     return "Disconnected\nConnection: " + ((q / 255) * 100).toFixed(2) + "%"
                                 }
                                 if (!v) return "Aircraft\n not Connected"
                                 if (q >= 200) return "Aircraft\n Connected"
                                 if (q >= 150) return "Weak Signal"
+
                                 return "Aircraft Disconnected"
                             }
                         }
